@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #eef2ee;
+  --color-surface: #ffffff;
+  --color-soft: #e1eae5;
+  --color-line: #d5ddd8;
+  --color-ink: #15211c;
+  --color-muted: #5d6b64;
+  --color-accent: #0c7a62;
+  --color-accent-ink: #ffffff;
+  --color-scale: #3557c9;
+  --color-run: #d9740f;
+  --color-sleep: #6b4fc4;
+  --color-water: #1b8bc2;
+  --color-warn: #b4441f;
+  --font-display: var(--font-display-face), "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-face), "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), "JetBrains Mono", ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f1613;
+    --color-surface: #18221e;
+    --color-soft: #1f2b26;
+    --color-line: #2b3833;
+    --color-ink: #e7efea;
+    --color-muted: #93a39b;
+    --color-accent: #3cc29e;
+    --color-accent-ink: #06231b;
+    --color-scale: #8ea6ff;
+    --color-run: #f0a050;
+    --color-sleep: #b29cff;
+    --color-water: #6cc4ee;
+    --color-warn: #f08a66;
+    color-scheme: dark;
+  }
+}
+
+html, body { background: var(--color-bg); color: var(--color-ink); }
+body {
+  font-family: var(--font-sans);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  -webkit-tap-highlight-color: transparent;
+}
+.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 18px; padding: 16px; }
+.btn { border-radius: 12px; padding: 10px 16px; font-weight: 600; background: var(--color-accent); color: var(--color-accent-ink); }
+.btn:disabled { opacity: .5; }
+.btn-ghost { border-radius: 12px; padding: 10px 16px; font-weight: 600; border: 1px solid var(--color-line); }
+.field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--color-muted); min-width: 0; }
+.field input, .field select, .field textarea {
+  font-size: 16px; /* 16px stops iOS zooming into inputs */
+  padding: 8px 10px; border-radius: 10px; border: 1px solid var(--color-line);
+  background: var(--color-bg); color: var(--color-ink); width: 100%;
+}
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
