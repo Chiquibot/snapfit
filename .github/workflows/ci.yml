@@ -20,7 +20,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: supabase/setup-cli@v1
         with:
           version: latest
