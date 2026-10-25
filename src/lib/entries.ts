@@ -81,7 +81,7 @@ export type Entry<T extends EntryType = EntryType> = {
 export type Person = {
   id: string;
   name: string;
-  kind: "adult" | "child";
+  kind: "adult";
   birth_year: number | null;
   height_cm: number | null;
   goal_kg: number | null;

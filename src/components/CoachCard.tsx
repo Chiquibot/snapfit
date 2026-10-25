@@ -4,7 +4,6 @@ import type { Person } from "@/lib/entries";
 
 export function CoachCard({ person }: { person: Person }) {
   const [state, setState] = useState<{ text: string; loading: boolean; error?: string }>({ text: "", loading: false });
-  const kid = person.kind === "child";
 
   async function ask() {
     setState({ text: "", loading: true });
@@ -23,7 +22,7 @@ export function CoachCard({ person }: { person: Person }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-display text-lg font-semibold">Coach</h2>
         <button className="btn" onClick={ask} disabled={state.loading}>
-          {state.loading ? "Thinking…" : "What should we improve?"}
+          {state.loading ? "Thinking…" : "What should I improve?"}
         </button>
       </div>
       {state.text ? (
@@ -32,9 +31,7 @@ export function CoachCard({ person }: { person: Person }) {
         <p className="text-sm text-warn">{state.error}</p>
       ) : (
         <p className="text-sm text-muted">
-          {kid
-            ? "Suggests fun, family-friendly ways to eat better, move more and sleep well together. It never puts a child on a diet."
-            : "Looks at the last 14 days of weigh-ins, meals, workouts, sleep, stress and water, then names the two or three changes that would help most this week."}
+          Looks at the last 14 days of weigh-ins, meals, workouts, sleep, stress and water, then names the two or three changes that would help most this week.
         </p>
       )}
     </section>

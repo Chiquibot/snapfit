@@ -3,12 +3,12 @@
 -- row level security so a signed-in user can only ever touch their own rows.
 
 -- ───────────────────────── people ─────────────────────────
--- One account tracks several people: the account holder and their kid(s).
+-- The person being tracked. One per account today; a table so more can be added later.
 create table public.people (
   id              uuid primary key default gen_random_uuid(),
   owner           uuid not null default auth.uid() references auth.users on delete cascade,
   name            text not null,
-  kind            text not null check (kind in ('adult', 'child')),
+  kind            text not null check (kind in ('adult')),
   birth_year      int  check (birth_year between 1900 and 2100),
   height_cm       numeric(5,1) check (height_cm between 50 and 250),
   goal_kg         numeric(5,1) check (goal_kg between 10 and 300),
@@ -107,7 +107,7 @@ create policy "own entries" on public.entries for all
   );
 
 -- ───────────────────────── new account setup ─────────────────────────
--- When someone signs up, create their settings and two starter people.
+-- When someone signs up, create their settings and their person row.
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -117,8 +117,6 @@ begin
   insert into public.settings (owner) values (new.id);
   insert into public.people (owner, name, kind, kcal_target, protein_target)
     values (new.id, 'Me', 'adult', 2000, 120);
-  insert into public.people (owner, name, kind, water_target_ml)
-    values (new.id, 'My kid', 'child', 1500);
   return new;
 end;
 $$;

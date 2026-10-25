@@ -15,13 +15,13 @@ const COLORS: Record<EntryType, string> = {
 
 type AnyEntry = Entry<EntryType>;
 
-function describe(e: AnyEntry, units: "kg" | "lb", kid: boolean): [string, string] {
+function describe(e: AnyEntry, units: "kg" | "lb"): [string, string] {
   const d = e.data as Record<string, never>;
   switch (e.type) {
     case "weight":
       return ["Weigh-in", `${fmtWeight(d.kg, units)} ${units}`];
     case "meal":
-      return [d.name || "Meal", kid ? (d.veg_fruit_servings != null ? `${d.veg_fruit_servings} veg/fruit` : "") : d.kcal != null ? `${Math.round(d.kcal)} kcal` : ""];
+      return [d.name || "Meal", d.kcal != null ? `${Math.round(d.kcal)} kcal` : ""];
     case "workout":
       return [
         `${String(d.activity || "Workout").replace(/^./, (c) => c.toUpperCase())}${d.app ? ` · ${d.app}` : ""}`,
@@ -36,7 +36,7 @@ function describe(e: AnyEntry, units: "kg" | "lb", kid: boolean): [string, strin
   }
 }
 
-export function EntryLog({ entries, units, timezone, kid, onDelete }: { entries: AnyEntry[]; units: "kg" | "lb"; timezone: string; kid: boolean; onDelete: (id: string) => void }) {
+export function EntryLog({ entries, units, timezone, onDelete }: { entries: AnyEntry[]; units: "kg" | "lb"; timezone: string; onDelete: (id: string) => void }) {
   const [armed, setArmed] = useState<string | null>(null);
   const shown = entries.filter((e) => e.type !== "water").slice(0, 30);
   const today = localDay(new Date(), timezone);
@@ -48,7 +48,7 @@ export function EntryLog({ entries, units, timezone, kid, onDelete }: { entries:
       </div>
       {shown.length === 0 && <p className="mt-2 text-sm text-muted">Nothing yet. Tap Scale, Meal, Workout or Sleep above and take a photo. You check the numbers before anything is saved.</p>}
       {shown.map((e) => {
-        const [title, value] = describe(e, units, kid);
+        const [title, value] = describe(e, units);
         const day = localDay(e.occurred_at, timezone);
         const when =
           day === today

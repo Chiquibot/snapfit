@@ -28,7 +28,6 @@ export function SnapGrid({ person, units, onSave }: { person: Person; units: "kg
     setReview({ kind, preview, loading: true, fields: {} });
     const form = new FormData();
     form.set("kind", kind);
-    form.set("child", person.kind === "child" ? "1" : "0");
     form.set("image", await shrinkImage(file), "photo.jpg");
     try {
       const res = await fetch("/api/scan", { method: "POST", body: form });

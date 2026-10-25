@@ -48,16 +48,10 @@ export function buildCoachPrompt(person: Person, entries: AnyEntry[], tz: string
   const rows = [sorted.map((e) => line(e, tz)).filter(Boolean).join("\n"), waterByDay(sorted, tz)].filter(Boolean).join("\n");
   const age = person.birth_year ? now.getFullYear() - person.birth_year : null;
 
-  const who =
-    person.kind === "child"
-      ? [
-          `This is for a child${age ? ` aged about ${age}` : ""}, logged by their parent.`,
-          "Give family-friendly advice for healthy habits: more vegetables and fruit, water instead of sugary drinks, fewer ultra-processed snacks, regular meals, about 60 minutes of active play a day, and good sleep.",
-          "Never suggest calorie restriction, dieting or weight loss for the child, and don't comment on the child's body or weight. Suggest things the parent and child can do together.",
-        ].join(" ")
-      : [
-          `This is for an adult who is overweight and wants to lose fat, get fit and have more energy.`,
+  const who = [
+          `This is for an adult${age ? ` aged about ${age}` : ""} who is overweight and wants to lose fat, get fit and have more energy.`,
           `Height ${person.height_cm ?? "unknown"} cm, goal weight ${person.goal_kg ?? "not set"} kg, daily targets ${person.kcal_target ?? "?"} kcal and ${person.protein_target ?? "?"} g protein, water ${person.water_target_ml} ml.`,
+          "Their motivation: getting back to their prime and setting an example for their kid.",
           "A safe pace is about 0.5–1% of body weight per week.",
         ].join(" ");
 

@@ -7,7 +7,6 @@ const n = z.coerce.number().finite();
 
 export const HealthPayload = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // the day the data belongs to
-  person: z.enum(["adult", "child"]).default("adult"),
   sleep_hours: n.min(0).max(24).optional(),
   resting_hr: n.min(25).max(200).optional(),
   hrv_ms: n.min(0).max(400).optional(),

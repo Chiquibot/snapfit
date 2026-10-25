@@ -54,7 +54,7 @@ export const SleepScan = z.object({
 export const SCAN_SCHEMAS = { weight: WeightScan, meal: MealScan, workout: WorkoutScan, sleep: SleepScan } as const;
 export type ScanResult = { [K in ScanKind]: z.infer<(typeof SCAN_SCHEMAS)[K]> };
 
-export function scanPrompt(kind: ScanKind, opts: { child: boolean }): string {
+export function scanPrompt(kind: ScanKind): string {
   switch (kind) {
     case "weight":
       return [
@@ -64,13 +64,11 @@ export function scanPrompt(kind: ScanKind, opts: { child: boolean }): string {
       ].join(" ");
     case "meal":
       return [
-        `The image should be a photo of a meal${opts.child ? " eaten by a child" : ""}.`,
+        "The image should be a photo of a meal.",
         "List each food with the portion you can see, then estimate nutrition for everything on the plate.",
         "Use typical home portions when unsure. If the image is not food, set is_food to false and use zeros.",
         "Write a short dish name in name.",
-        opts.child
-          ? "In tip, give one kind, practical idea to make this meal better for a growing child. Never suggest dieting, smaller portions or cutting calories."
-          : "In tip, give one practical idea to make this meal better for an adult losing fat while keeping energy up.",
+        "In tip, give one practical idea to make this meal better for an adult losing fat while keeping energy up.",
       ].join(" ");
     case "workout":
       return [

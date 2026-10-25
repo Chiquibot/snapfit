@@ -9,13 +9,13 @@ export type Settings = { owner: string; timezone: string; wake_hour: number; sle
 
 type Props = { email: string; people: Person[]; settings: Settings; monthCost: number; monthCalls: number; hasToken: boolean };
 
-const PERSON_FIELDS: { k: keyof Person; label: string; adultOnly?: boolean; type?: string }[] = [
+const PERSON_FIELDS: { k: keyof Person; label: string; type?: string }[] = [
   { k: "name", label: "Name", type: "text" },
   { k: "birth_year", label: "Birth year" },
-  { k: "height_cm", label: "Height (cm)", adultOnly: true },
-  { k: "goal_kg", label: "Goal weight (kg)", adultOnly: true },
-  { k: "kcal_target", label: "Daily calories", adultOnly: true },
-  { k: "protein_target", label: "Daily protein (g)", adultOnly: true },
+  { k: "height_cm", label: "Height (cm)" },
+  { k: "goal_kg", label: "Goal weight (kg)" },
+  { k: "kcal_target", label: "Daily calories" },
+  { k: "protein_target", label: "Daily protein (g)" },
   { k: "water_target_ml", label: "Daily water (ml)" },
 ];
 
@@ -42,7 +42,7 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
     const { error } = await supabase
       .from("people")
       .update({
-        name: p.name || (p.kind === "adult" ? "Me" : "My kid"),
+        name: p.name || "Me",
         birth_year: num(p.birth_year),
         height_cm: num(p.height_cm),
         goal_kg: num(p.goal_kg),
@@ -121,9 +121,9 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
 
       {ppl.map((p, i) => (
         <section key={p.id} className="card flex flex-col gap-3">
-          <h2 className="font-display text-lg font-semibold">{p.kind === "adult" ? "You" : "Your kid"}</h2>
+          <h2 className="font-display text-lg font-semibold">You</h2>
           <div className="grid grid-cols-2 gap-2">
-            {PERSON_FIELDS.filter((f) => !(f.adultOnly && p.kind === "child")).map((f) => (
+            {PERSON_FIELDS.map((f) => (
               <label key={f.k} className="field" htmlFor={`${p.id}-${f.k}`}>
                 {f.label}
                 <input
@@ -136,7 +136,6 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
               </label>
             ))}
           </div>
-          {p.kind === "child" && <p className="text-xs text-muted">For kids, Snapfit tracks habits (veg and fruit, activity, sleep, water) and never sets calorie targets.</p>}
           <div className="flex items-center gap-2">
             <button className="btn-ghost" onClick={() => savePerson(ppl[i])}>
               Save

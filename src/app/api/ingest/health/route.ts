@@ -23,7 +23,6 @@ export async function POST(req: Request) {
     .from("people")
     .select("id")
     .eq("owner", tok.owner)
-    .eq("kind", parsed.data.person)
     .order("created_at")
     .limit(1)
     .maybeSingle();

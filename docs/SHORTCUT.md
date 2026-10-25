@@ -9,7 +9,6 @@ Snapfit is a web app, so it can't read Apple Health directly. This iPhone Shortc
 ```json
 {
   "date": "2026-10-18",
-  "person": "adult",
   "sleep_hours": 6.8,
   "resting_hr": 64,
   "hrv_ms": 41,
@@ -53,7 +52,6 @@ Open **Shortcuts → +** (new shortcut) and add these actions in order.
 8. **Format Date** → *Current Date* → Custom format `yyyy-MM-dd` → rename `Today`.
 9. **Dictionary** with these keys:
    - `date` (Text) → `Today`
-   - `person` (Text) → `adult`
    - `sleep_hours` (Number) → `SleepHours`
    - `resting_hr` (Number) → `RestingHR`
    - `hrv_ms` (Number) → `HRV`
