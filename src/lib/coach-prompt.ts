@@ -28,6 +28,10 @@ function line(e: AnyEntry, tz: string): string {
       const c = e.data as Entry<"checkin">["data"];
       return `${d} check-in: stress ${v(c.stress)}/5, energy ${v(c.energy)}/5, rested ${v(c.rested)}/5${c.note ? `, note: "${c.note}"` : ""}`;
     }
+    case "blood_pressure": {
+      const b = e.data as Entry<"blood_pressure">["data"];
+      return `${d} blood pressure ${b.systolic}/${b.diastolic} mmHg${b.pulse ? `, pulse ${b.pulse}` : ""}`;
+    }
     case "water":
       return ""; // summarized per day below
   }
@@ -48,16 +52,10 @@ export function buildCoachPrompt(person: Person, entries: AnyEntry[], tz: string
   const rows = [sorted.map((e) => line(e, tz)).filter(Boolean).join("\n"), waterByDay(sorted, tz)].filter(Boolean).join("\n");
   const age = person.birth_year ? now.getFullYear() - person.birth_year : null;
 
-  const who =
-    person.kind === "child"
-      ? [
-          `This is for a child${age ? ` aged about ${age}` : ""}, logged by their parent.`,
-          "Give family-friendly advice for healthy habits: more vegetables and fruit, water instead of sugary drinks, fewer ultra-processed snacks, regular meals, about 60 minutes of active play a day, and good sleep.",
-          "Never suggest calorie restriction, dieting or weight loss for the child, and don't comment on the child's body or weight. Suggest things the parent and child can do together.",
-        ].join(" ")
-      : [
-          `This is for an adult who is overweight and wants to lose fat, get fit and have more energy.`,
+  const who = [
+          `This is for an adult${age ? ` aged about ${age}` : ""} who is overweight and wants to lose fat, get fit and have more energy.`,
           `Height ${person.height_cm ?? "unknown"} cm, goal weight ${person.goal_kg ?? "not set"} kg, daily targets ${person.kcal_target ?? "?"} kcal and ${person.protein_target ?? "?"} g protein, water ${person.water_target_ml} ml.`,
+          "Their motivation: getting back to their prime and setting an example for their kid.",
           "A safe pace is about 0.5–1% of body weight per week.",
         ].join(" ");
 
@@ -71,5 +69,5 @@ Write a short check-in in plain language, at most 200 words, no headings or tabl
 2. If the data shows a link between sleep, stress, food or activity (for example, more snacking after short nights), name it in one sentence. Skip this if there isn't enough data.
 3. The two or three changes that would help most this week, each specific and doable. Base them on the data.
 4. One sentence of encouragement.
-If something looks worrying (very low calories, very fast weight change, very poor sleep for many days, very high stress), gently suggest checking with a doctor. You are not a doctor; don't diagnose.`;
+If something looks worrying (very low calories, very fast weight change, very poor sleep for many days, very high stress, blood pressure readings often at or above 140/90), gently suggest checking with a doctor. You are not a doctor; don't diagnose.`;
 }

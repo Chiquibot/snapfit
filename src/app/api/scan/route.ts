@@ -6,7 +6,7 @@ import { ScanKind } from "@/lib/scan";
 const MAX_BYTES = 4 * 1024 * 1024;
 const TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"] as const;
 
-// POST multipart/form-data: kind, child ("1" or "0"), image (file).
+// POST multipart/form-data: kind, image (file).
 // The photo is read and then discarded; only the numbers the user confirms are stored.
 export async function POST(req: Request) {
   const auth = await requireUser();
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
   try {
     const base64 = Buffer.from(await file.arrayBuffer()).toString("base64");
-    const out = await readPhoto(auth.user.id, kind.data, { base64, mediaType }, { child: form?.get("child") === "1" });
+    const out = await readPhoto(auth.user.id, kind.data, { base64, mediaType });
     return NextResponse.json(out);
   } catch (e) {
     const err = e instanceof ClaudeError ? e : new ClaudeError("Something went wrong reading that.", 500);

@@ -18,8 +18,7 @@ export type NewEntry = { type: EntryType; data: Record<string, unknown>; occurre
 
 export function Dashboard({ people, timezone, units }: { people: Person[]; timezone: string; units: "kg" | "lb" }) {
   const supabase = useMemo(() => createClient(), []);
-  const [personId, setPersonId] = useState(people[0]?.id);
-  const person = people.find((p) => p.id === personId) ?? people[0];
+  const person = people[0];
   const [entries, setEntries] = useState<AnyEntry[]>([]);
   const [error, setError] = useState("");
 
@@ -74,7 +73,6 @@ export function Dashboard({ people, timezone, units }: { people: Person[]; timez
   const trend = weightTrend(entries);
   const rate = weeklyRate(trend);
   const wb = wellbeing(entries, today, timezone);
-  const kid = person.kind === "child";
   const lastWeight = trend.at(-1)?.kg ?? null;
 
   return (
@@ -86,23 +84,9 @@ export function Dashboard({ people, timezone, units }: { people: Person[]; timez
           </p>
           <h1 className="font-display text-3xl font-extrabold tracking-tight">Snapfit</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="inline-flex rounded-full bg-soft p-1" role="group" aria-label="Who is this for">
-            {people.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPersonId(p.id)}
-                aria-pressed={p.id === person.id}
-                className={`rounded-full px-3 py-1.5 text-sm font-semibold ${p.id === person.id ? "bg-surface shadow-sm" : "text-muted"}`}
-              >
-                {p.name}
-              </button>
-            ))}
-          </div>
-          <Link href="/settings" className="btn-ghost text-sm" aria-label="Settings">
-            Settings
-          </Link>
-        </div>
+        <Link href="/settings" className="btn-ghost text-sm">
+          Settings
+        </Link>
       </header>
 
       {error && <p className="rounded-xl bg-soft px-3 py-2 text-sm text-warn">{error}</p>}
@@ -111,19 +95,11 @@ export function Dashboard({ people, timezone, units }: { people: Person[]; timez
 
       <section className="card flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-lg font-semibold">{kid ? `${person.name}'s day` : "Today"}</h2>
+          <h2 className="font-display text-lg font-semibold">Today</h2>
           <span className="rounded-full bg-soft px-2 py-0.5 text-xs font-semibold">{streak(entries, today, timezone)}-day streak</span>
         </div>
         <div className="grid grid-cols-2 gap-2">
-          {kid ? (
-            <>
-              <Stat label="Veg & fruit" value={day.veg_fruit_servings} unit="of 5 servings" pct={day.veg_fruit_servings / 5} />
-              <Stat label="Active today" value={day.workout_min} unit="of 60 min" pct={day.workout_min / 60} color="var(--color-run)" />
-              <Stat label="Meals snapped" value={day.meals} unit="today" />
-              <Stat label="Sleep (7-day avg)" value={wb.sleep_hours ?? "–"} unit="h" color="var(--color-sleep)" />
-            </>
-          ) : (
-            <>
+          <>
               <Stat
                 label="Calories"
                 value={day.kcal}
@@ -143,21 +119,21 @@ export function Dashboard({ people, timezone, units }: { people: Person[]; timez
                 value={fmtWeight(lastWeight, units)}
                 unit={rate === null ? units : `${units} · ${rate > 0 ? "+" : ""}${rate} kg/wk`}
               />
-            </>
-          )}
+          </>
         </div>
-        <div className="grid grid-cols-3 gap-2 text-center text-xs text-muted">
+        <div className="grid grid-cols-2 gap-2 text-center text-xs text-muted sm:grid-cols-4">
           <Mini label="Sleep avg" value={wb.sleep_hours === null ? "–" : `${wb.sleep_hours} h`} />
           <Mini label="Stress avg" value={wb.stress === null ? "–" : `${wb.stress}/5`} />
           <Mini label="Energy avg" value={wb.energy === null ? "–" : `${wb.energy}/5`} />
+          <Mini label="Blood pressure avg" value={wb.bp ? `${wb.bp.systolic}/${wb.bp.diastolic}` : "–"} />
         </div>
       </section>
 
       <WaterCard drankMl={day.water_ml} targetMl={person.water_target_ml} onAdd={(ml) => add({ type: "water", data: { ml } })} />
       <CheckinCard onSave={(data) => add({ type: "checkin", data })} />
-      <WeightChart trend={trend} units={units} goalKg={kid ? null : person.goal_kg} title={kid ? "Growth check-ins" : "Weight trend"} />
+      <WeightChart trend={trend} units={units} goalKg={person.goal_kg} title="Weight trend" />
       <CoachCard person={person} />
-      <EntryLog entries={entries} units={units} timezone={timezone} kid={kid} onDelete={remove} />
+      <EntryLog entries={entries} units={units} timezone={timezone} onDelete={remove} />
     </>
   );
 }

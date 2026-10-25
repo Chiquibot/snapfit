@@ -1,6 +1,6 @@
 # Snapfit
 
-Snap-to-log family fitness tracker. Next.js 16 (App Router) web app installed on iPhone as a PWA, Supabase (Postgres + auth + RLS), Claude API for reading photos and coaching, deployed on Vercel.
+Personal snap-to-log fitness tracker (one user). Next.js 16 (App Router) web app installed on iPhone as a PWA, Supabase (Postgres + auth + RLS), Claude API for reading photos and coaching, deployed on Vercel.
 
 ## Commands
 - `npm run dev` — local app on :3000 (needs `.env.local`, see `.env.example`)
@@ -13,6 +13,5 @@ Snap-to-log family fitness tracker. Next.js 16 (App Router) web app installed on
 - Pure logic goes in `src/lib/` with a test in `tests/`. Components stay thin.
 - Server-only modules import `"server-only"`. The service-role client (`src/lib/supabase/admin.ts`) is only for the Shortcut import and the reminder job, always filtered by owner.
 - Claude calls go through `src/lib/claude.ts`, which logs cost to `ai_usage`. Models are set by env vars (`SCAN_MODEL`, `MEAL_MODEL`, `COACH_MODEL`).
-- Kid profiles: no calorie targets, no weight-loss language anywhere in UI or prompts.
 - Photos are never stored.
 - Next 16 uses `src/proxy.ts` (not `middleware.ts`).

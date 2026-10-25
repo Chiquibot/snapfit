@@ -1,6 +1,6 @@
 # Setup guide
 
-This takes about an hour the first time. Every service here has a free plan that covers one family. The only paid part is Claude API usage, which is cents to a few dollars a month (see `docs/adr/0005-claude-models-and-cost.md`).
+This takes about an hour the first time. Every service here has a free plan that covers one person's use. The only paid part is Claude API usage, which is cents to a few dollars a month (see `docs/adr/0005-claude-models-and-cost.md`).
 
 What you'll set up, in order:
 
@@ -96,7 +96,7 @@ Tell Supabase where magic links should send you back to.
 <p>Or tap: <a href="{{ .ConfirmationURL }}">Sign in</a></p>
 ```
 
-Open your app URL, enter your email, and type the code from the email (or tap the link). You're in. Signing up automatically creates "Me" and "My kid"; rename them in Settings.
+Open your app URL, enter your email, and type the code from the email (or tap the link). You're in. Then open Settings and fill in your height, goal and daily targets.
 
 ## 6. Hourly water reminder job
 

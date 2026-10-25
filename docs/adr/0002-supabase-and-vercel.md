@@ -13,4 +13,4 @@ The app needs a database, sign-in, a place to run server code that holds the Cla
 ## Consequences
 - One Postgres database is the single source of truth. Access rules are enforced by the database, not only by app code.
 - Free Supabase projects pause after about a week without activity. Daily use (and the hourly job) keeps it awake.
-- Supabase's built-in email sender is rate limited to a few emails an hour, which is fine for one family's magic links.
+- Supabase's built-in email sender is rate limited to a few emails an hour, which is fine for one person's sign-in codes.

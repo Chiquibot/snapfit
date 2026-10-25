@@ -2,6 +2,15 @@
 
 Snapfit is a web app, so it can't read Apple Health directly. This iPhone Shortcut runs every morning, reads yesterday's numbers from Health, and sends them to Snapfit. It's free and needs no extra apps.
 
+**It's optional.** Everything it sends can also be logged in Snapfit with a photo or typed in. Set up only the parts your devices cover, and add more later.
+
+| If you have | It sends | Set up in its app |
+|---|---|---|
+| A watch or band (Apple Watch, Xiaomi Smart Band, Amazfit, Garmin) | sleep, resting heart rate, HRV, steps, workouts | Mi Fitness / Zepp / Garmin Connect → Apple Health |
+| A smart scale (e.g. Xiaomi S200) | weight, body fat | Xiaomi Home → Apple Health |
+| A Bluetooth BP monitor (e.g. Omron with Omron Connect) | blood pressure, pulse | Omron Connect → Apple Health |
+| Nike Run Club, Hevy | workouts | see "Before you start" |
+
 > **Status: draft.** These steps follow the Shortcuts app's Health actions, but they haven't been tested end to end on a phone yet. Action names can differ slightly between iOS versions. If a step doesn't match, the goal is the same: build the JSON below and POST it.
 
 ## What gets sent
@@ -9,11 +18,15 @@ Snapfit is a web app, so it can't read Apple Health directly. This iPhone Shortc
 ```json
 {
   "date": "2026-10-18",
-  "person": "adult",
   "sleep_hours": 6.8,
   "resting_hr": 64,
   "hrv_ms": 41,
   "steps": 8400,
+  "weight_kg": 96.4,
+  "body_fat_pct": 31.2,
+  "blood_pressure": [
+    { "at": "2026-10-18T07:10:00+08:00", "systolic": 128, "diastolic": 82, "pulse": 71 }
+  ],
   "workouts": [
     { "start": "2026-10-17T18:05:00+08:00", "activity": "Running", "app": "Nike Run Club", "duration_min": 31.5, "distance_km": 5.02, "kcal": 380 }
   ]
@@ -26,7 +39,7 @@ Every field except `date` is optional. Sending the same day twice updates that d
 
 1. **Nike Run Club → Settings → Privacy → Health:** let it write workouts to Health.
 2. **Hevy → Settings → Apple Health:** turn on syncing workouts.
-3. **Snapfit → Settings → Apple Health sync → Create token.** Copy the token and the "Send to" URL somewhere you can paste from.
+3. **Snapfit → Settings → Devices → Create token.** Copy the token and the "Send to" URL somewhere you can paste from.
 
 ## Build the Shortcut
 
@@ -48,16 +61,26 @@ Open **Shortcuts → +** (new shortcut) and add these actions in order.
 
 7. **Find Health Samples** → Type *Steps*, *last 1 day* → **Calculate Statistics** → *Sum* → rename `Steps`.
 
+### Weight and body fat (if you have a smart scale)
+
+Use the same pattern: **Find Health Samples** → Type *Weight* (then *Body Fat Percentage*), *last 1 day*, latest first, limit 1 → **Get Details** → *Value*. Rename them `Weight` and `BodyFat`. If Health shows weight in lb, add **Calculate** ÷ 2.20462 to get kg.
+
+### Blood pressure (if you have a BP monitor)
+
+Find Health Samples → Type *Blood Pressure Systolic*, *last 1 day*, latest first, limit 1 → Get Details → *Value* → rename `SYS`. Same for *Blood Pressure Diastolic* → `DIA`. Then make a small **Dictionary** with `systolic` → `SYS` and `diastolic` → `DIA`, and put it in a **List** → rename `BP`.
+
 ### Send it
 
 8. **Format Date** → *Current Date* → Custom format `yyyy-MM-dd` → rename `Today`.
 9. **Dictionary** with these keys:
    - `date` (Text) → `Today`
-   - `person` (Text) → `adult`
    - `sleep_hours` (Number) → `SleepHours`
    - `resting_hr` (Number) → `RestingHR`
    - `hrv_ms` (Number) → `HRV`
    - `steps` (Number) → `Steps`
+   - `weight_kg` (Number) → `Weight` (skip if no scale)
+   - `body_fat_pct` (Number) → `BodyFat` (skip if no scale)
+   - `blood_pressure` (Array) → `BP` (skip if no monitor)
 10. **Get Contents of URL**
     - URL: the "Send to" URL from Snapfit settings (ends in `/api/ingest/health`)
     - Method: **POST**

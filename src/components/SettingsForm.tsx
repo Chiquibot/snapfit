@@ -7,15 +7,22 @@ import type { Person } from "@/lib/entries";
 
 export type Settings = { owner: string; timezone: string; wake_hour: number; sleep_hour: number; water_reminders: boolean; units: "kg" | "lb" };
 
-type Props = { email: string; people: Person[]; settings: Settings; monthCost: number; monthCalls: number; hasToken: boolean };
+type Props = { email: string; people: Person[]; settings: Settings; monthCost: number; monthCalls: number; hasToken: boolean; lastSynced: Record<string, string> };
 
-const PERSON_FIELDS: { k: keyof Person; label: string; adultOnly?: boolean; type?: string }[] = [
+const SYNC_TYPES: { type: string; label: string; device: string }[] = [
+  { type: "weight", label: "Weight & body fat", device: "smart scale" },
+  { type: "sleep", label: "Sleep & resting heart rate", device: "watch or band" },
+  { type: "workout", label: "Workouts", device: "Nike, Hevy or a watch" },
+  { type: "blood_pressure", label: "Blood pressure", device: "BP monitor" },
+];
+
+const PERSON_FIELDS: { k: keyof Person; label: string; type?: string }[] = [
   { k: "name", label: "Name", type: "text" },
   { k: "birth_year", label: "Birth year" },
-  { k: "height_cm", label: "Height (cm)", adultOnly: true },
-  { k: "goal_kg", label: "Goal weight (kg)", adultOnly: true },
-  { k: "kcal_target", label: "Daily calories", adultOnly: true },
-  { k: "protein_target", label: "Daily protein (g)", adultOnly: true },
+  { k: "height_cm", label: "Height (cm)" },
+  { k: "goal_kg", label: "Goal weight (kg)" },
+  { k: "kcal_target", label: "Daily calories" },
+  { k: "protein_target", label: "Daily protein (g)" },
   { k: "water_target_ml", label: "Daily water (ml)" },
 ];
 
@@ -25,7 +32,7 @@ function urlBase64ToUint8Array(base64: string) {
   return Uint8Array.from(raw, (c) => c.charCodeAt(0));
 }
 
-export function SettingsForm({ email, people, settings, monthCost, monthCalls, hasToken }: Props) {
+export function SettingsForm({ email, people, settings, monthCost, monthCalls, hasToken, lastSynced }: Props) {
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const [ppl, setPpl] = useState(people);
@@ -42,7 +49,7 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
     const { error } = await supabase
       .from("people")
       .update({
-        name: p.name || (p.kind === "adult" ? "Me" : "My kid"),
+        name: p.name || "Me",
         birth_year: num(p.birth_year),
         height_cm: num(p.height_cm),
         goal_kg: num(p.goal_kg),
@@ -121,9 +128,9 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
 
       {ppl.map((p, i) => (
         <section key={p.id} className="card flex flex-col gap-3">
-          <h2 className="font-display text-lg font-semibold">{p.kind === "adult" ? "You" : "Your kid"}</h2>
+          <h2 className="font-display text-lg font-semibold">You</h2>
           <div className="grid grid-cols-2 gap-2">
-            {PERSON_FIELDS.filter((f) => !(f.adultOnly && p.kind === "child")).map((f) => (
+            {PERSON_FIELDS.map((f) => (
               <label key={f.k} className="field" htmlFor={`${p.id}-${f.k}`}>
                 {f.label}
                 <input
@@ -136,7 +143,6 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
               </label>
             ))}
           </div>
-          {p.kind === "child" && <p className="text-xs text-muted">For kids, Snapfit tracks habits (veg and fruit, activity, sleep, water) and never sets calorie targets.</p>}
           <div className="flex items-center gap-2">
             <button className="btn-ghost" onClick={() => savePerson(ppl[i])}>
               Save
@@ -201,10 +207,23 @@ export function SettingsForm({ email, people, settings, monthCost, monthCalls, h
       </section>
 
       <section className="card flex flex-col gap-3">
-        <h2 className="font-display text-lg font-semibold">Apple Health sync</h2>
+        <h2 className="font-display text-lg font-semibold">Devices (optional)</h2>
         <p className="text-sm text-muted">
-          An iPhone Shortcut sends yesterday&apos;s sleep, Nike and Hevy workouts and resting heart rate every morning. Set-up steps are in docs/SHORTCUT.md in the repo.
+          Devices that write to Apple Health can fill these in automatically through an iPhone Shortcut each morning (docs/SHORTCUT.md in the repo). Anything without a device: snap a photo or type it in.
         </p>
+        <ul className="flex flex-col divide-y divide-line rounded-xl border border-line text-sm">
+          {SYNC_TYPES.map((t) => (
+            <li key={t.type} className="flex items-center justify-between gap-2 px-3 py-2">
+              <span>
+                {t.label}
+                <span className="block text-xs text-muted">from a {t.device}</span>
+              </span>
+              <span className={`text-xs ${lastSynced[t.type] ? "text-accent" : "text-muted"}`}>
+                {lastSynced[t.type] ? `Synced ${new Date(lastSynced[t.type]).toLocaleDateString(undefined, { month: "short", day: "numeric" })}` : "Photo or typed"}
+              </span>
+            </li>
+          ))}
+        </ul>
         {token ? (
           <div className="flex flex-col gap-2 rounded-xl bg-soft p-3 text-sm">
             <p className="font-semibold">Copy this token now. It won&apos;t be shown again.</p>

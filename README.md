@@ -2,7 +2,7 @@
 
 **Snap a photo instead of typing.** Photograph your bathroom scale, your plate, or a Nike Run Club or Hevy workout summary. Snapfit reads the numbers, you check them, and it logs them. Sleep, resting heart rate and workouts arrive from Apple Health on their own. Once a week, a coach reads two weeks of your data and tells you the two or three changes that would help most.
 
-Built to get back in shape together with my kid. It runs on free plans plus a few cents of AI a month.
+A personal project: getting back to my prime, and setting an example for my kid along the way. It runs on free plans plus a few cents of AI a month.
 
 ![CI](https://github.com/Chiquibot/snapfit/actions/workflows/ci.yml/badge.svg)
 
@@ -10,16 +10,16 @@ Built to get back in shape together with my kid. It runs on free plans plus a fe
 
 | | |
 |---|---|
-| **Scale** | Photo of the display → weight, with a 7-weigh-in average to smooth out daily swings |
+| **Weight** | Photo of the scale, typed in, or synced from a smart scale → weight and body fat, with a 7-weigh-in average to smooth out daily swings |
 | **Meal** | Photo of the plate → foods, calories, protein, carbs, fat, fiber, veg & fruit servings, and one tip |
 | **Workout** | Nike Run Club or Hevy screenshot → distance, time, calories, volume lifted |
-| **Sleep** | Sleep app screenshot, or automatic from Apple Health |
+| **Sleep** | Sleep app screenshot, typed in, or synced from a watch or band |
+| **Blood pressure** | Photo of the monitor, typed in, or synced from a Bluetooth monitor |
 | **Check-in** | 10-second stress, energy and rest scores, morning and evening |
 | **Water** | One-tap +250 / +500 ml, with push reminders only when you're behind |
 | **Coach** | Two weeks of data → what's working, any link between sleep, stress and food, and what to change this week |
-| **Family** | Separate profiles. Kid profiles track habits and never get calorie targets or diet advice. |
 
-Every photo reading is reviewed before it's saved, and photos are never stored.
+Devices are optional: every measurement can be synced from a device, read from a photo, or typed in. Every reading is reviewed before it's saved, and photos are never stored.
 
 ## Architecture
 
@@ -86,7 +86,7 @@ npm run lint && npm run typecheck && npm test && npm run build
 - [x] Water tracking with smart push reminders
 - [x] Stress, energy and rest check-ins
 - [x] Apple Health import through an iPhone Shortcut
-- [x] AI coach with kid-safe guardrails
+- [x] AI coach that spots links between sleep, stress and food
 - [ ] Weekly report pushed every Sunday
 - [ ] Trends page: sleep vs. snacking, stress vs. workouts
 - [ ] Hevy API sync for set-by-set detail (needs Hevy Pro)
@@ -95,7 +95,7 @@ npm run lint && npm run typecheck && npm test && npm run build
 
 ## Privacy
 
-See [docs/PRIVACY.md](docs/PRIVACY.md). In short: no photos stored, every table locked to its owner by the database, and the kid profile never gets diet advice.
+See [docs/PRIVACY.md](docs/PRIVACY.md). In short: no photos stored, and every table locked to its owner by the database.
 
 ## License
 

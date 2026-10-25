@@ -83,11 +83,15 @@ export function wellbeing(entries: AnyEntry[], today: string, timeZone: string, 
     return v.length ? Math.round((v.reduce((a, x) => a + x, 0) / v.length) * 10) / 10 : null;
   };
   const sleeps = ofType(inRange, "sleep");
+  const bps = ofType(inRange, "blood_pressure");
   const checkins = ofType(inRange, "checkin");
   return {
     sleep_hours: avg(sleeps.map((s) => s.data.hours)),
     stress: avg(checkins.map((c) => c.data.stress)),
     energy: avg(checkins.map((c) => c.data.energy)),
     rested: avg(checkins.map((c) => c.data.rested)),
+    bp: bps.length
+      ? { systolic: Math.round(avg(bps.map((b) => b.data.systolic))!), diastolic: Math.round(avg(bps.map((b) => b.data.diastolic))!), readings: bps.length }
+      : null,
   };
 }

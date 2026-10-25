@@ -13,5 +13,5 @@ Reading photos and writing coaching need an AI model. The goal is a running cost
 - Every call writes its token counts and estimated cost to `ai_usage`. The settings page shows the month's total.
 
 ## Consequences
-- Typical cost is around $0.0005 per photo on Haiku and $0.01 on Sonnet. A family's month is cents to a few dollars.
+- Typical cost is around $0.0005 per photo on Haiku and $0.01 on Sonnet. A month is cents to a few dollars.
 - The Claude Console spend limit is the hard ceiling. The app's own number is an estimate based on the price table in `src/lib/cost.ts`.

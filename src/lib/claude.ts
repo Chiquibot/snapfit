@@ -42,7 +42,6 @@ export async function readPhoto<K extends ScanKind>(
   owner: string,
   kind: K,
   image: { base64: string; mediaType: ImageMedia },
-  opts: { child: boolean },
 ): Promise<{ result: ScanResult[K]; costUsd: number; model: string }> {
   const model = kind === "meal" ? MODELS.meal : MODELS.scan;
   try {
@@ -56,7 +55,7 @@ export async function readPhoto<K extends ScanKind>(
           role: "user",
           content: [
             { type: "image", source: { type: "base64", media_type: image.mediaType, data: image.base64 } },
-            { type: "text", text: scanPrompt(kind, opts) },
+            { type: "text", text: scanPrompt(kind) },
           ],
         },
       ],
