@@ -10,15 +10,16 @@ A personal project: getting back to my prime, and setting an example for my kid 
 
 | | |
 |---|---|
-| **Scale** | Photo of the display → weight, with a 7-weigh-in average to smooth out daily swings |
+| **Weight** | Photo of the scale, typed in, or synced from a smart scale → weight and body fat, with a 7-weigh-in average to smooth out daily swings |
 | **Meal** | Photo of the plate → foods, calories, protein, carbs, fat, fiber, veg & fruit servings, and one tip |
 | **Workout** | Nike Run Club or Hevy screenshot → distance, time, calories, volume lifted |
-| **Sleep** | Sleep app screenshot, or automatic from Apple Health |
+| **Sleep** | Sleep app screenshot, typed in, or synced from a watch or band |
+| **Blood pressure** | Photo of the monitor, typed in, or synced from a Bluetooth monitor |
 | **Check-in** | 10-second stress, energy and rest scores, morning and evening |
 | **Water** | One-tap +250 / +500 ml, with push reminders only when you're behind |
 | **Coach** | Two weeks of data → what's working, any link between sleep, stress and food, and what to change this week |
 
-Every photo reading is reviewed before it's saved, and photos are never stored.
+Devices are optional: every measurement can be synced from a device, read from a photo, or typed in. Every reading is reviewed before it's saved, and photos are never stored.
 
 ## Architecture
 

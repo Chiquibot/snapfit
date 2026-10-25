@@ -121,10 +121,11 @@ export function Dashboard({ people, timezone, units }: { people: Person[]; timez
               />
           </>
         </div>
-        <div className="grid grid-cols-3 gap-2 text-center text-xs text-muted">
+        <div className="grid grid-cols-2 gap-2 text-center text-xs text-muted sm:grid-cols-4">
           <Mini label="Sleep avg" value={wb.sleep_hours === null ? "–" : `${wb.sleep_hours} h`} />
           <Mini label="Stress avg" value={wb.stress === null ? "–" : `${wb.stress}/5`} />
           <Mini label="Energy avg" value={wb.energy === null ? "–" : `${wb.energy}/5`} />
+          <Mini label="Blood pressure avg" value={wb.bp ? `${wb.bp.systolic}/${wb.bp.diastolic}` : "–"} />
         </div>
       </section>
 

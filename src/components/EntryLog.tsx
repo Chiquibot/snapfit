@@ -11,6 +11,7 @@ const COLORS: Record<EntryType, string> = {
   sleep: "var(--color-sleep)",
   checkin: "var(--color-muted)",
   water: "var(--color-water)",
+  blood_pressure: "var(--color-warn)",
 };
 
 type AnyEntry = Entry<EntryType>;
@@ -33,6 +34,8 @@ function describe(e: AnyEntry, units: "kg" | "lb"): [string, string] {
       return ["Check-in", [d.stress && `stress ${d.stress}`, d.energy && `energy ${d.energy}`].filter(Boolean).join(" · ")];
     case "water":
       return ["Water", `${d.ml} ml`];
+    case "blood_pressure":
+      return ["Blood pressure", `${d.systolic}/${d.diastolic}${d.pulse ? ` · ${d.pulse} bpm` : ""}`];
   }
 }
 
@@ -61,7 +64,7 @@ export function EntryLog({ entries, units, timezone, onDelete }: { entries: AnyE
               <div className="break-words">{title}</div>
               <div className="text-xs text-muted">
                 {when}
-                {e.source === "shortcut" ? " · Apple Health" : ""}
+                {e.source === "shortcut" ? " · from Apple Health" : e.source === "photo" ? " · from photo" : ""}
               </div>
             </div>
             <div className="num text-right text-sm">

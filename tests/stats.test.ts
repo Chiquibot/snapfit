@@ -73,6 +73,6 @@ describe("wellbeing", () => {
       e("checkin", "2026-10-18T01:00:00Z", { stress: 4, energy: 2 }),
       e("checkin", "2026-10-17T12:00:00Z", { stress: 2 }),
     ];
-    expect(wellbeing(entries, "2026-10-18", tz)).toEqual({ sleep_hours: 6.5, stress: 3, energy: 2, rested: null });
+    expect(wellbeing(entries, "2026-10-18", tz)).toEqual({ sleep_hours: 6.5, stress: 3, energy: 2, rested: null, bp: null });
   });
 });

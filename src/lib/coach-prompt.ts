@@ -28,6 +28,10 @@ function line(e: AnyEntry, tz: string): string {
       const c = e.data as Entry<"checkin">["data"];
       return `${d} check-in: stress ${v(c.stress)}/5, energy ${v(c.energy)}/5, rested ${v(c.rested)}/5${c.note ? `, note: "${c.note}"` : ""}`;
     }
+    case "blood_pressure": {
+      const b = e.data as Entry<"blood_pressure">["data"];
+      return `${d} blood pressure ${b.systolic}/${b.diastolic} mmHg${b.pulse ? `, pulse ${b.pulse}` : ""}`;
+    }
     case "water":
       return ""; // summarized per day below
   }
@@ -65,5 +69,5 @@ Write a short check-in in plain language, at most 200 words, no headings or tabl
 2. If the data shows a link between sleep, stress, food or activity (for example, more snacking after short nights), name it in one sentence. Skip this if there isn't enough data.
 3. The two or three changes that would help most this week, each specific and doable. Base them on the data.
 4. One sentence of encouragement.
-If something looks worrying (very low calories, very fast weight change, very poor sleep for many days, very high stress), gently suggest checking with a doctor. You are not a doctor; don't diagnose.`;
+If something looks worrying (very low calories, very fast weight change, very poor sleep for many days, very high stress, blood pressure readings often at or above 140/90), gently suggest checking with a doctor. You are not a doctor; don't diagnose.`;
 }

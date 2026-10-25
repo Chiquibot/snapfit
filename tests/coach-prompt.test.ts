@@ -16,6 +16,7 @@ const me: Person = {
 const entries = [
   { id: "1", person_id: "p", type: "meal", occurred_at: "2026-10-18T04:00:00Z", data: { name: "Adobo", kcal: 650, protein_g: 35 }, source: "photo" },
   { id: "2", person_id: "p", type: "water", occurred_at: "2026-10-18T05:00:00Z", data: { ml: 500 }, source: "manual" },
+  { id: "4", person_id: "p", type: "blood_pressure", occurred_at: "2026-10-18T07:00:00Z", data: { systolic: 138, diastolic: 88, pulse: 74 }, source: "manual" },
   { id: "3", person_id: "p", type: "checkin", occurred_at: "2026-10-18T06:00:00Z", data: { stress: 4, energy: 2 }, source: "manual" },
 ] as unknown as Entry<EntryType>[];
 
@@ -25,6 +26,7 @@ describe("buildCoachPrompt", () => {
     expect(p).toContain('meal "Adobo": 650 kcal');
     expect(p).toContain("water 0.5 L");
     expect(p).toContain("stress 4/5");
+    expect(p).toContain("blood pressure 138/88 mmHg, pulse 74");
     expect(p).toContain("2000 kcal");
     expect(p).toContain("aged about 38");
   });
@@ -33,6 +35,7 @@ describe("buildCoachPrompt", () => {
     const p = buildCoachPrompt(me, [], "UTC");
     expect(p).toContain("(no data yet)");
     expect(p).toContain("suggest checking with a doctor");
+    expect(p).toContain("140/90");
     expect(p).toContain("don't diagnose");
   });
 });

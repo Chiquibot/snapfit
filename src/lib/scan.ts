@@ -3,7 +3,7 @@ import { z } from "zod";
 // What Claude returns for each kind of photo. These are deliberately loose
 // (nullable fields) because the user reviews and fixes every value before saving.
 
-export const ScanKind = z.enum(["weight", "meal", "workout", "sleep"]);
+export const ScanKind = z.enum(["weight", "meal", "workout", "sleep", "blood_pressure"]);
 export type ScanKind = z.infer<typeof ScanKind>;
 
 export const WeightScan = z.object({
@@ -51,7 +51,14 @@ export const SleepScan = z.object({
   hrv_ms: z.number().nullable(),
 });
 
-export const SCAN_SCHEMAS = { weight: WeightScan, meal: MealScan, workout: WorkoutScan, sleep: SleepScan } as const;
+export const BloodPressureScan = z.object({
+  readable: z.boolean(),
+  systolic: z.number().nullable(),
+  diastolic: z.number().nullable(),
+  pulse: z.number().nullable(),
+});
+
+export const SCAN_SCHEMAS = { weight: WeightScan, meal: MealScan, workout: WorkoutScan, sleep: SleepScan, blood_pressure: BloodPressureScan } as const;
 export type ScanResult = { [K in ScanKind]: z.infer<(typeof SCAN_SCHEMAS)[K]> };
 
 export function scanPrompt(kind: ScanKind): string {
@@ -82,6 +89,12 @@ export function scanPrompt(kind: ScanKind): string {
         "The image should be a screenshot of a sleep summary from an app or watch (for example Apple Health or a sleep tracker).",
         "Read total time asleep in decimal hours, and deep sleep, REM, resting heart rate and HRV if shown.",
         "Use null for anything not shown. If it is not a sleep summary, set readable to false.",
+      ].join(" ");
+    case "blood_pressure":
+      return [
+        "The image should be a photo of a blood pressure monitor's display.",
+        "Read systolic (the top or largest number, often labeled SYS), diastolic (DIA) and pulse (PUL or a heart symbol) in mmHg and beats per minute.",
+        "Use null for anything you can't read. If it is not a blood pressure monitor, set readable to false.",
       ].join(" ");
   }
 }

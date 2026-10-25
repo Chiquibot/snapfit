@@ -54,6 +54,13 @@ export const CheckinData = z.object({
 
 export const WaterData = z.object({ ml: num.positive().max(3000) });
 
+// mmHg. Pulse is beats per minute.
+export const BloodPressureData = z.object({
+  systolic: num.min(60).max(260),
+  diastolic: num.min(30).max(160),
+  pulse: num.min(30).max(220).nullish(),
+});
+
 export const ENTRY_SCHEMAS = {
   weight: WeightData,
   meal: MealData,
@@ -61,6 +68,7 @@ export const ENTRY_SCHEMAS = {
   sleep: SleepData,
   checkin: CheckinData,
   water: WaterData,
+  blood_pressure: BloodPressureData,
 } as const;
 
 export type EntryType = keyof typeof ENTRY_SCHEMAS;
